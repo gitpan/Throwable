@@ -1,0 +1,22 @@
+{
+   "resources" : {
+      "repository" : "http://github.com/rjbs/throwable/tree"
+   },
+   "meta-spec" : {
+      "version" : 1.4,
+      "url" : "http://module-build.sourceforge.net/META-spec-v1.4.html"
+   },
+   "generated_by" : "Dist::Zilla::Plugin::MetaJSON version 1.091480",
+   "version" : "0.091780",
+   "name" : "Throwable",
+   "author" : [
+      "Ricardo SIGNES <rjbs@cpan.org>",
+      "Florian Ragwitz <rafl@debian.org>"
+   ],
+   "license" : "perl",
+   "requires" : {
+      "Devel::StackTrace" : "1.20_0001",
+      "Moose" : "0.74"
+   },
+   "abstract" : "a role for classes that can be thrown"
+}
