@@ -1,5 +1,5 @@
 package Throwable::Error;
-our $VERSION = '0.091780';
+our $VERSION = '0.091900';
 
 use Moose;
 with 'Throwable';
@@ -30,7 +30,7 @@ sub as_string {
 
 {
   use Moose::Util::TypeConstraints;
-  
+
   has stack_trace => (
     is      => 'ro',
     isa     => duck_type([ qw(as_string) ]),
@@ -66,14 +66,18 @@ sub _build_stack_trace_class {
 sub _build_stack_trace_args {
   my ($self) = @_;
   my $found_mark = 0;
-  my $uplevel = 4; # number of *raw* frames to go up after we found the marker
+  my $uplevel = 3; # number of *raw* frames to go up after we found the marker
   return [
-    ignore_class     => [ __PACKAGE__ ],
-    find_start_frame => sub {
+    frame_filter => sub {
       my ($raw) = @_;
-      $found_mark ||= scalar $raw->{caller}->[3] =~ /__stack_marker$/;
-      return 0 unless $found_mark;
-      return !$uplevel--;
+      if ($found_mark) {
+          return 1 unless $uplevel;
+          return !$uplevel--;
+      }
+      else {
+        $found_mark = scalar $raw->{caller}->[3] =~ /__stack_marker$/;
+        return 0;
+    }
     },
   ];
 }
@@ -110,7 +114,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.091780
+version 0.091900
 
 =head1 SYNOPSIS
 
