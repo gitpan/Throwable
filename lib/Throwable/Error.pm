@@ -1,5 +1,5 @@
 package Throwable::Error;
-our $VERSION = '0.091900';
+our $VERSION = '0.092000';
 
 use Moose;
 with 'Throwable';
@@ -114,7 +114,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.091900
+version 0.092000
 
 =head1 SYNOPSIS
 

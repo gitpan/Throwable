@@ -1,5 +1,5 @@
 package Throwable;
-our $VERSION = '0.091900';
+our $VERSION = '0.092000';
 
 use Moose::Role;
 # ABSTRACT: a role for classes that can be thrown
@@ -34,7 +34,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.091900
+version 0.092000
 
 =head1 SYNOPSIS
 
