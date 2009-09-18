@@ -1,5 +1,5 @@
 package Throwable;
-our $VERSION = '0.092000';
+our $VERSION = '0.092610';
 
 use Moose::Role;
 # ABSTRACT: a role for classes that can be thrown
@@ -34,7 +34,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.092000
+version 0.092610
 
 =head1 SYNOPSIS
 
@@ -80,7 +80,7 @@ use the created object as the only argument to C<die>.
 This software is copyright (c) 2009 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
-the same terms as perl itself.
+the same terms as the Perl 5 programming language system itself.
 
 =cut 
 

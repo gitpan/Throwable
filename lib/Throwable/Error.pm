@@ -1,5 +1,5 @@
 package Throwable::Error;
-our $VERSION = '0.092000';
+our $VERSION = '0.092610';
 
 use Moose;
 with 'Throwable';
@@ -38,7 +38,7 @@ sub as_string {
   );
 
   my $tc = subtype as 'ClassName';
-  coerce $tc, from 'Str', via { Class::MOP::load_class($_) };
+  coerce $tc, from 'Str', via { Class::MOP::load_class($_); $_ };
 
   has stack_trace_class => (
     is      => 'ro',
@@ -114,7 +114,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.092000
+version 0.092610
 
 =head1 SYNOPSIS
 
@@ -180,7 +180,7 @@ error's message followed by the its stack trace.
 This software is copyright (c) 2009 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
-the same terms as perl itself.
+the same terms as the Perl 5 programming language system itself.
 
 =cut 
 
