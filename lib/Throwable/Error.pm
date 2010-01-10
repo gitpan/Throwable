@@ -1,6 +1,5 @@
 package Throwable::Error;
-our $VERSION = '0.092610';
-
+our $VERSION = '0.100090';
 use Moose;
 with 'Throwable';
 # ABSTRACT: an easy-to-use class for error objects
@@ -89,6 +88,19 @@ sub _build_stack_trace {
   );
 }
 
+sub BUILDARGS {
+  my ($self, @args) = @_;
+
+  return {} unless @args;
+  return {} if @args == 1 and ! defined $args[0];
+
+  if (@args == 1 and (!ref $args[0]) and defined $args[0] and length $args[0]) {
+    return { message => $args[0] };
+  }
+
+  return $self->SUPER::BUILDARGS(@args);
+}
+
 around new => sub {
   my $next = shift;
   my $self = shift;
@@ -105,7 +117,6 @@ no Moose;
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -114,7 +125,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.092610
+version 0.100090
 
 =head1 SYNOPSIS
 
@@ -122,11 +133,22 @@ version 0.092610
   use Moose;
   extends 'Throwable::Error';
 
-  has execution_phase => (is => 'ro', isa => 'MyApp::Phase');
+  has execution_phase => (
+    is  => 'ro',
+    isa => 'MyApp::Phase',
+    default => 'startup',
+  );
 
 ...and in your app...
 
-  MyApp::Error->throw({ phase => $self->phase });
+  MyApp::Error->throw("all communications offline");
+
+  # or...
+
+  MyApp::Error->throw({
+    message => "all communications offline",
+    phase   => 'shutdown',
+  });
 
 =head1 DESCRIPTION
 
@@ -177,11 +199,10 @@ error's message followed by the its stack trace.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Ricardo SIGNES.
+This software is copyright (c) 2010 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

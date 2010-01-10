@@ -1,6 +1,5 @@
 package Throwable;
-our $VERSION = '0.092610';
-
+our $VERSION = '0.100090';
 use Moose::Role;
 # ABSTRACT: a role for classes that can be thrown
 
@@ -16,8 +15,14 @@ has 'previous_exception' => (
 
 
 sub throw {
-  my ($self, @rest) = @_;
-  my $throwable = $self->new(@rest);
+  my ($inv) = shift;
+
+  if (blessed $inv) {
+    confess "throw called on Throwable object with arguments" if @_;
+    die $inv;
+  }
+
+  my $throwable = $inv->new(@_);
   die $throwable;
 }
 
@@ -25,7 +30,6 @@ no Moose::Role;
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -34,7 +38,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.092610
+version 0.100090
 
 =head1 SYNOPSIS
 
@@ -70,6 +74,8 @@ Throwable object is created.
 This method will call new, passing all arguments along to new, and will then
 use the created object as the only argument to C<die>.
 
+If called on an object that does Throwable, the object will be rethrown.
+
 =head1 AUTHORS
 
   Ricardo SIGNES <rjbs@cpan.org>
@@ -77,11 +83,10 @@ use the created object as the only argument to C<die>.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Ricardo SIGNES.
+This software is copyright (c) 2010 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

@@ -1,0 +1,18 @@
+---
+abstract: 'a role for classes that can be thrown'
+author:
+  - 'Ricardo SIGNES <rjbs@cpan.org>'
+  - 'Florian Ragwitz <rafl@debian.org>'
+generated_by: 'Dist::Zilla version 1.100060'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Throwable
+requires:
+  Devel::StackTrace: 1.21
+  ExtUtils::MakeMaker: 6.11
+  Moose: 0.87
+resources:
+  repository: http://github.com/rjbs/throwable
+version: 0.100090
