@@ -1,6 +1,8 @@
 package Throwable::Error;
-our $VERSION = '0.100090';
-use Moose;
+BEGIN {
+  $Throwable::Error::VERSION = '0.101110';
+}
+use Moose 0.87;
 with 'Throwable';
 # ABSTRACT: an easy-to-use class for error objects
 
@@ -125,7 +127,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.100090
+version 0.101110
 
 =head1 SYNOPSIS
 

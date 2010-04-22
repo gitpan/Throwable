@@ -1,7 +1,7 @@
 
 
-This archive contains the distribution Throwable, version
-0.100090:
+This archive contains the distribution Throwable,
+version 0.101110:
 
   a role for classes that can be thrown
 
@@ -9,4 +9,5 @@ This software is copyright (c) 2010 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
 

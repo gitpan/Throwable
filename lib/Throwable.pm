@@ -1,6 +1,8 @@
 package Throwable;
-our $VERSION = '0.100090';
-use Moose::Role;
+BEGIN {
+  $Throwable::VERSION = '0.101110';
+}
+use Moose::Role 0.87;
 # ABSTRACT: a role for classes that can be thrown
 
 
@@ -8,7 +10,7 @@ has 'previous_exception' => (
   is       => 'ro',
   init_arg => undef,
   default  => sub {
-    return unless defined $@ and ref $@ or length $@;
+    return unless defined $@ and (ref $@ or length $@);
     return $@;
   },
 );
@@ -38,7 +40,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.100090
+version 0.101110
 
 =head1 SYNOPSIS
 

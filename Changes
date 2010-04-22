@@ -1,5 +1,12 @@
 Revision history for Throwable
 
+0.101110  2010-04-21 20:59:59 America/New_York
+          avoid doing: length undef (thanks, Yuval Kogman)
+
+0.100090  2010-01-10
+          $error->throw now rethrows existing Errors
+          Error->throw("str") now uses the string as message attr
+
 0.092610  2009-09-18
           fix to work with latest Class::MOP (thanks, Paul Mooney)
 
