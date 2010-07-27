@@ -1,9 +1,9 @@
 package Throwable::Error;
 BEGIN {
-  $Throwable::Error::VERSION = '0.101110';
+  $Throwable::Error::VERSION = '0.102080';
 }
 use Moose 0.87;
-with 'Throwable';
+with 'Throwable', 'StackTrace::Auto';
 # ABSTRACT: an easy-to-use class for error objects
 
 
@@ -28,68 +28,6 @@ sub as_string {
   return $str;
 }
 
-
-{
-  use Moose::Util::TypeConstraints;
-
-  has stack_trace => (
-    is      => 'ro',
-    isa     => duck_type([ qw(as_string) ]),
-    builder => '_build_stack_trace',
-  );
-
-  my $tc = subtype as 'ClassName';
-  coerce $tc, from 'Str', via { Class::MOP::load_class($_); $_ };
-
-  has stack_trace_class => (
-    is      => 'ro',
-    isa     => $tc,
-    coerce  => 1,
-    lazy    => 1,
-    builder => '_build_stack_trace_class',
-  );
-
-  no Moose::Util::TypeConstraints;
-}
-
-
-has stack_trace_args => (
-  is      => 'ro',
-  isa     => 'ArrayRef',
-  lazy    => 1,
-  builder => '_build_stack_trace_args',
-);
-
-sub _build_stack_trace_class {
-  return 'Devel::StackTrace';
-}
-
-sub _build_stack_trace_args {
-  my ($self) = @_;
-  my $found_mark = 0;
-  my $uplevel = 3; # number of *raw* frames to go up after we found the marker
-  return [
-    frame_filter => sub {
-      my ($raw) = @_;
-      if ($found_mark) {
-          return 1 unless $uplevel;
-          return !$uplevel--;
-      }
-      else {
-        $found_mark = scalar $raw->{caller}->[3] =~ /__stack_marker$/;
-        return 0;
-    }
-    },
-  ];
-}
-
-sub _build_stack_trace {
-  my ($self) = @_;
-  return $self->stack_trace_class->new(
-    @{ $self->stack_trace_args },
-  );
-}
-
 sub BUILDARGS {
   my ($self, @args) = @_;
 
@@ -103,18 +41,7 @@ sub BUILDARGS {
   return $self->SUPER::BUILDARGS(@args);
 }
 
-around new => sub {
-  my $next = shift;
-  my $self = shift;
-  return $self->__stack_marker($next, @_);
-};
-
-sub __stack_marker {
-  my $self = shift;
-  my $next = shift;
-  return $self->$next(@_);
-}
-
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 no Moose;
 1;
 
@@ -127,7 +54,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.101110
+version 0.102080
 
 =head1 SYNOPSIS
 
@@ -159,7 +86,10 @@ errors and abort normal program flow.  Throwable::Error is an alternative to
 L<Exception::Class|Exception::Class>, the features of which are largely
 provided by the Moose object system atop which Throwable::Error is built.
 
-Throwable::Error performs the L<Throwable|Throwable> role.
+Throwable::Error performs the L<Throwable|Throwable> and L<StackTrace::Auto>
+roles.  That means you can call C<throw> on it to create and throw n error
+object in one call, and that every error object will have a stack trace for its
+creation.
 
 =head1 ATTRIBUTES
 
@@ -171,21 +101,10 @@ error is stringified.
 
 =head2 stack_trace
 
-This attribute will contain an object representing the stack at the point when
-the error was generated and thrown.  It must be an object performing the
-C<as_string> method.
-
-=head2 stack_trace_class
-
-This attribute may be provided to use an alternate class for stack traces.  The
-default is L<Devel::StackTrace|Devel::StackTrace>.
-
-In general, you will not need to think about this attribute.
-
-=head2 stack_trace_args
-
-This attribute is an arrayref of arguments to pass when building the stack
-trace.  In general, you will not need to think about it.
+This attribute, provided by L<StackTrace::Auto>, will contain a stack trace
+object guaranteed to respond to the C<as_string> method.  For more information
+about the stack trace and associated behavior, consult the L<StackTrace::Auto>
+docs.
 
 =head1 METHODS
 
@@ -196,8 +115,17 @@ error's message followed by the its stack trace.
 
 =head1 AUTHORS
 
-  Ricardo SIGNES <rjbs@cpan.org>
-  Florian Ragwitz <rafl@debian.org>
+=over 4
+
+=item *
+
+Ricardo SIGNES <rjbs@cpan.org>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

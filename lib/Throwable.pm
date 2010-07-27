@@ -1,6 +1,6 @@
 package Throwable;
 BEGIN {
-  $Throwable::VERSION = '0.101110';
+  $Throwable::VERSION = '0.102080';
 }
 use Moose::Role 0.87;
 # ABSTRACT: a role for classes that can be thrown
@@ -40,7 +40,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.101110
+version 0.102080
 
 =head1 SYNOPSIS
 
@@ -80,8 +80,17 @@ If called on an object that does Throwable, the object will be rethrown.
 
 =head1 AUTHORS
 
-  Ricardo SIGNES <rjbs@cpan.org>
-  Florian Ragwitz <rafl@debian.org>
+=over 4
+
+=item *
+
+Ricardo SIGNES <rjbs@cpan.org>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
