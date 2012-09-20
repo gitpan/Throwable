@@ -1,26 +1,33 @@
 package Throwable;
-BEGIN {
-  $Throwable::VERSION = '0.102080';
+{
+  $Throwable::VERSION = '0.200000'; # TRIAL
 }
-use Moose::Role 0.87;
+use Moo::Role;
+use Sub::Quote ();
+use Scalar::Util ();
+use Carp ();
+
 # ABSTRACT: a role for classes that can be thrown
 
 
 has 'previous_exception' => (
   is       => 'ro',
   init_arg => undef,
-  default  => sub {
-    return unless defined $@ and (ref $@ or length $@);
-    return $@;
-  },
+  default  => Sub::Quote::quote_sub(q{
+    if (defined $@ and (ref $@ or length $@)) {
+      $@;
+    } else {
+      undef;
+    }
+  }),
 );
 
 
 sub throw {
   my ($inv) = shift;
 
-  if (blessed $inv) {
-    confess "throw called on Throwable object with arguments" if @_;
+  if (Scalar::Util::blessed($inv)) {
+    Carp::confess "throw called on Throwable object with arguments" if @_;
     die $inv;
   }
 
@@ -28,10 +35,11 @@ sub throw {
   die $throwable;
 }
 
-no Moose::Role;
+no Moo::Role;
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -40,7 +48,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.102080
+version 0.200000
 
 =head1 SYNOPSIS
 
@@ -94,10 +102,9 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Ricardo SIGNES.
+This software is copyright (c) 2012 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

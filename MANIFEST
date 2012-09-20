@@ -9,5 +9,10 @@ dist.ini
 lib/StackTrace/Auto.pm
 lib/Throwable.pm
 lib/Throwable/Error.pm
+t/00-compile.t
+t/000-report-versions-tiny.t
 t/basic.t
-t/release-pod-syntax.t
+xt/moose-coerce-class.t
+xt/moose.t
+xt/release/changes_has_content.t
+xt/release/pod-syntax.t

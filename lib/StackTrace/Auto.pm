@@ -1,39 +1,43 @@
 package StackTrace::Auto;
-BEGIN {
-  $StackTrace::Auto::VERSION = '0.102080';
+{
+  $StackTrace::Auto::VERSION = '0.200000'; # TRIAL
 }
-use Moose::Role 0.87;
+use Moo::Role;
+use Sub::Quote ();
+use MooX::Types::MooseLike::Base qw(ArrayRef);
+use Class::Load ();
+
 # ABSTRACT: a role for generating stack traces during instantiation
 
 
-{
-  use Moose::Util::TypeConstraints;
+has stack_trace => (
+  is       => 'ro',
+  isa      => Sub::Quote::quote_sub(q{
+    require Scalar::Util;
+    die "stack_trace must be have an 'as_string' method!" unless
+       Scalar::Util::blessed($_[0]) && $_[0]->can('as_string')
+  }),
+  builder  => '_build_stack_trace',
+  init_arg => undef,
+);
 
-  has stack_trace => (
-    is       => 'ro',
-    isa      => duck_type([ qw(as_string) ]),
-    builder  => '_build_stack_trace',
-    init_arg => undef,
-  );
-
-  my $tc = subtype as 'ClassName';
-  coerce $tc, from 'Str', via { Class::MOP::load_class($_); $_ };
-
-  has stack_trace_class => (
-    is      => 'ro',
-    isa     => $tc,
-    coerce  => 1,
-    lazy    => 1,
-    builder => '_build_stack_trace_class',
-  );
-
-  no Moose::Util::TypeConstraints;
-}
+has stack_trace_class => (
+  is      => 'ro',
+  isa     => Sub::Quote::quote_sub(q{
+      die "stack_trace_class must be a loaded class"
+          unless Class::Load::is_class_loaded($_[0]);
+  }),
+  coerce  => Sub::Quote::quote_sub(q{
+    Class::Load::load_class($_[0]);
+  }),
+  lazy    => 1,
+  builder => '_build_stack_trace_class',
+);
 
 
 has stack_trace_args => (
   is      => 'ro',
-  isa     => 'ArrayRef',
+  isa     => ArrayRef,
   lazy    => 1,
   builder => '_build_stack_trace_args',
 );
@@ -45,18 +49,26 @@ sub _build_stack_trace_class {
 sub _build_stack_trace_args {
   my ($self) = @_;
   my $found_mark = 0;
-  my $uplevel = 3; # number of *raw* frames to go up after we found the marker
   return [
     frame_filter => sub {
       my ($raw) = @_;
-      if ($found_mark) {
-          return 1 unless $uplevel;
-          return !$uplevel--;
+      my $sub = $raw->{caller}->[3];
+      (my $package = $sub) =~ s/::\w+\z//;
+      if ($found_mark == 3) {
+          return 1;
+      }
+      elsif ($found_mark == 2) {
+        return 0 if $sub =~ /::new$/ && $self->isa($package);
+        $found_mark++;
+        return 1;
+      } elsif ($found_mark == 1) {
+        $found_mark++ if $sub =~ /::new$/ && $self->isa($package);
+        return 0;
       }
       else {
-        $found_mark = scalar $raw->{caller}->[3] =~ /__stack_marker$/;
+        $found_mark++ if $raw->{caller}->[3] =~ /::_build_stack_trace$/;
         return 0;
-    }
+      }
     },
   ];
 }
@@ -68,22 +80,11 @@ sub _build_stack_trace {
   );
 }
 
-around new => sub {
-  my $next = shift;
-  my $self = shift;
-  return $self->__stack_marker($next, @_);
-};
-
-sub __stack_marker {
-  my $self = shift;
-  my $next = shift;
-  return $self->$next(@_);
-}
-
-no Moose::Role;
+no Moo::Role;
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -92,7 +93,7 @@ StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.102080
+version 0.200000
 
 =head1 SYNOPSIS
 
@@ -146,10 +147,9 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Ricardo SIGNES.
+This software is copyright (c) 2012 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

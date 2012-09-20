@@ -1,8 +1,9 @@
 package Throwable::Error;
-BEGIN {
-  $Throwable::Error::VERSION = '0.102080';
+{
+  $Throwable::Error::VERSION = '0.200000'; # TRIAL
 }
-use Moose 0.87;
+use Moo;
+use MooX::Types::MooseLike::Base qw(Str);
 with 'Throwable', 'StackTrace::Auto';
 # ABSTRACT: an easy-to-use class for error objects
 
@@ -14,7 +15,7 @@ use overload
 
 has message => (
   is       => 'ro',
-  isa      => 'Str',
+  isa      => Str,
   required => 1,
 );
 
@@ -41,11 +42,10 @@ sub BUILDARGS {
   return $self->SUPER::BUILDARGS(@args);
 }
 
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);
-no Moose;
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -54,7 +54,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.102080
+version 0.200000
 
 =head1 SYNOPSIS
 
@@ -75,8 +75,8 @@ version 0.102080
   # or...
 
   MyApp::Error->throw({
-    message => "all communications offline",
-    phase   => 'shutdown',
+    message         => "all communications offline",
+    execution_phase => 'shutdown',
   });
 
 =head1 DESCRIPTION
@@ -87,7 +87,7 @@ L<Exception::Class|Exception::Class>, the features of which are largely
 provided by the Moose object system atop which Throwable::Error is built.
 
 Throwable::Error performs the L<Throwable|Throwable> and L<StackTrace::Auto>
-roles.  That means you can call C<throw> on it to create and throw n error
+roles.  That means you can call C<throw> on it to create and throw an error
 object in one call, and that every error object will have a stack trace for its
 creation.
 
@@ -129,10 +129,9 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Ricardo SIGNES.
+This software is copyright (c) 2012 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
