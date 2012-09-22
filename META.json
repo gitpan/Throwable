@@ -23,7 +23,7 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
-            "Class::Load" : "0",
+            "Class::Load" : "0.20",
             "Devel::StackTrace" : "1.21",
             "Moo" : "0",
             "Moo::Role" : "0",
@@ -52,7 +52,7 @@
          "web" : "https://github.com/rjbs/throwable"
       }
    },
-   "version" : "0.200000",
+   "version" : "0.200001",
    "x_Dist_Zilla" : {
       "plugins" : [
          {

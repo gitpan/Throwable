@@ -50,7 +50,7 @@ sub pmver {
 }
 
 eval { $v .= pmver('Carp','any version') };
-eval { $v .= pmver('Class::Load','any version') };
+eval { $v .= pmver('Class::Load','0.20') };
 eval { $v .= pmver('Devel::StackTrace','1.21') };
 eval { $v .= pmver('ExtUtils::MakeMaker','6.30') };
 eval { $v .= pmver('File::Find','any version') };

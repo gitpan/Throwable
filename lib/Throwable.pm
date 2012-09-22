@@ -1,6 +1,6 @@
 package Throwable;
 {
-  $Throwable::VERSION = '0.200000'; # TRIAL
+  $Throwable::VERSION = '0.200001'; # TRIAL
 }
 use Moo::Role;
 use Sub::Quote ();
@@ -48,7 +48,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.200000
+version 0.200001
 
 =head1 SYNOPSIS
 

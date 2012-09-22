@@ -1,11 +1,11 @@
 package StackTrace::Auto;
 {
-  $StackTrace::Auto::VERSION = '0.200000'; # TRIAL
+  $StackTrace::Auto::VERSION = '0.200001'; # TRIAL
 }
 use Moo::Role;
 use Sub::Quote ();
 use MooX::Types::MooseLike::Base qw(ArrayRef);
-use Class::Load ();
+use Class::Load 0.20 ();
 
 # ABSTRACT: a role for generating stack traces during instantiation
 
@@ -93,7 +93,7 @@ StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.200000
+version 0.200001
 
 =head1 SYNOPSIS
 

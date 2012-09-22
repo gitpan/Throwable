@@ -20,7 +20,7 @@ meta-spec:
 name: Throwable
 requires:
   Carp: 0
-  Class::Load: 0
+  Class::Load: 0.20
   Devel::StackTrace: 1.21
   Moo: 0
   Moo::Role: 0
@@ -31,7 +31,7 @@ requires:
 resources:
   homepage: https://github.com/rjbs/throwable
   repository: https://github.com/rjbs/throwable.git
-version: 0.200000
+version: 0.200001
 x_Dist_Zilla:
   plugins:
     -

@@ -27,7 +27,7 @@ my %WriteMakefileArgs = (
   "NAME" => "Throwable",
   "PREREQ_PM" => {
     "Carp" => 0,
-    "Class::Load" => 0,
+    "Class::Load" => "0.20",
     "Devel::StackTrace" => "1.21",
     "Moo" => 0,
     "Moo::Role" => 0,
@@ -36,7 +36,7 @@ my %WriteMakefileArgs = (
     "Sub::Quote" => 0,
     "overload" => 0
   },
-  "VERSION" => "0.200000",
+  "VERSION" => "0.200001",
   "test" => {
     "TESTS" => "t/*.t"
   }
