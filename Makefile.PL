@@ -29,14 +29,14 @@ my %WriteMakefileArgs = (
     "Carp" => 0,
     "Class::Load" => "0.20",
     "Devel::StackTrace" => "1.21",
-    "Moo" => 0,
+    "Moo" => "1.000001",
     "Moo::Role" => 0,
     "MooX::Types::MooseLike::Base" => 0,
     "Scalar::Util" => 0,
     "Sub::Quote" => 0,
     "overload" => 0
   },
-  "VERSION" => "0.200001",
+  "VERSION" => "0.200002",
   "test" => {
     "TESTS" => "t/*.t"
   }
