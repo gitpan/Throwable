@@ -1,6 +1,6 @@
 package Throwable::Error;
 {
-  $Throwable::Error::VERSION = '0.200002'; # TRIAL
+  $Throwable::Error::VERSION = '0.200003';
 }
 use Moo 1.000001;
 use MooX::Types::MooseLike::Base qw(Str);
@@ -54,7 +54,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.200002
+version 0.200003
 
 =head1 SYNOPSIS
 

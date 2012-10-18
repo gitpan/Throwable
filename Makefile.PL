@@ -36,7 +36,7 @@ my %WriteMakefileArgs = (
     "Sub::Quote" => 0,
     "overload" => 0
   },
-  "VERSION" => "0.200002",
+  "VERSION" => "0.200003",
   "test" => {
     "TESTS" => "t/*.t"
   }

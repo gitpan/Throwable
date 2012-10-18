@@ -60,6 +60,7 @@ eval { $v .= pmver('MooX::Types::MooseLike::Base','any version') };
 eval { $v .= pmver('Scalar::Util','any version') };
 eval { $v .= pmver('Sub::Quote','any version') };
 eval { $v .= pmver('Test::More','0.96') };
+eval { $v .= pmver('Test::Pod','1.41') };
 eval { $v .= pmver('overload','any version') };
 eval { $v .= pmver('strict','any version') };
 eval { $v .= pmver('warnings','any version') };
