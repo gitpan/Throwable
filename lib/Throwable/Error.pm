@@ -1,6 +1,6 @@
 package Throwable::Error;
 {
-  $Throwable::Error::VERSION = '0.200003';
+  $Throwable::Error::VERSION = '0.200004';
 }
 use Moo 1.000001;
 use MooX::Types::MooseLike::Base qw(Str);
@@ -29,18 +29,19 @@ sub as_string {
   return $str;
 }
 
-sub BUILDARGS {
-  my ($self, @args) = @_;
+around BUILDARGS => sub {
+  my $orig = shift;
+  my $self = shift;
 
-  return {} unless @args;
-  return {} if @args == 1 and ! defined $args[0];
+  return {} unless @_;
+  return {} if @_ == 1 and ! defined $_[0];
 
-  if (@args == 1 and (!ref $args[0]) and defined $args[0] and length $args[0]) {
-    return { message => $args[0] };
+  if (@_ == 1 and (!ref $_[0]) and defined $_[0] and length $_[0]) {
+    return { message => $_[0] };
   }
 
-  return $self->SUPER::BUILDARGS(@args);
-}
+  return $self->$orig(@_);
+};
 
 1;
 
@@ -54,7 +55,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.200003
+version 0.200004
 
 =head1 SYNOPSIS
 
@@ -129,7 +130,7 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Ricardo SIGNES.
+This software is copyright (c) 2013 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
