@@ -1,11 +1,12 @@
 package StackTrace::Auto;
 {
-  $StackTrace::Auto::VERSION = '0.200004';
+  $StackTrace::Auto::VERSION = '0.200005';
 }
 use Moo::Role;
 use Sub::Quote ();
 use MooX::Types::MooseLike::Base qw(ArrayRef);
 use Class::Load 0.20 ();
+use Scalar::Util ();
 
 # ABSTRACT: a role for generating stack traces during instantiation
 
@@ -48,6 +49,9 @@ sub _build_stack_trace_class {
 
 sub _build_stack_trace_args {
   my ($self) = @_;
+
+  Scalar::Util::weaken($self);  # Prevent memory leak
+
   my $found_mark = 0;
   return [
     frame_filter => sub {
@@ -93,7 +97,7 @@ StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.200004
+version 0.200005
 
 =head1 SYNOPSIS
 
