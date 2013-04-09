@@ -59,7 +59,7 @@
          "web" : "https://github.com/rjbs/throwable"
       }
    },
-   "version" : "0.200006",
+   "version" : "0.200007",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.017010"

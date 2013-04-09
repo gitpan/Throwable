@@ -32,7 +32,7 @@ requires:
 resources:
   homepage: https://github.com/rjbs/throwable
   repository: https://github.com/rjbs/throwable.git
-version: 0.200006
+version: 0.200007
 x_Dist_Zilla:
   perl:
     version: 5.017010

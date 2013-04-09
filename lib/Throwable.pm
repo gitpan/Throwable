@@ -1,6 +1,6 @@
 package Throwable;
 {
-  $Throwable::VERSION = '0.200006';
+  $Throwable::VERSION = '0.200007';
 }
 use Moo::Role;
 use Sub::Quote ();
@@ -14,7 +14,6 @@ our %_HORRIBLE_HACK;
 
 has 'previous_exception' => (
   is       => 'ro',
-  init_arg => undef,
   default  => Sub::Quote::quote_sub(q<
     if ($Throwable::_HORRIBLE_HACK{ERROR}) {
       $Throwable::_HORRIBLE_HACK{ERROR}
@@ -53,7 +52,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.200006
+version 0.200007
 
 =head1 SYNOPSIS
 
