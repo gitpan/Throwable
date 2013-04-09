@@ -12,6 +12,7 @@ lib/Throwable/Error.pm
 t/00-compile.t
 t/000-report-versions-tiny.t
 t/basic.t
+t/strace_bug.t
 xt/memory-leak.t
 xt/moose-coerce-class.t
 xt/moose.t

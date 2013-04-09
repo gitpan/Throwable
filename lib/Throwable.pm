@@ -1,6 +1,6 @@
 package Throwable;
 {
-  $Throwable::VERSION = '0.200005';
+  $Throwable::VERSION = '0.200006';
 }
 use Moo::Role;
 use Sub::Quote ();
@@ -10,16 +10,20 @@ use Carp ();
 # ABSTRACT: a role for classes that can be thrown
 
 
+our %_HORRIBLE_HACK;
+
 has 'previous_exception' => (
   is       => 'ro',
   init_arg => undef,
-  default  => Sub::Quote::quote_sub(q{
-    if (defined $@ and (ref $@ or length $@)) {
+  default  => Sub::Quote::quote_sub(q<
+    if ($Throwable::_HORRIBLE_HACK{ERROR}) {
+      $Throwable::_HORRIBLE_HACK{ERROR}
+    } elsif (defined $@ and (ref $@ or length $@)) {
       $@;
     } else {
       undef;
     }
-  }),
+  >),
 );
 
 
@@ -31,6 +35,7 @@ sub throw {
     die $inv;
   }
 
+  local $_HORRIBLE_HACK{ERROR} = $@;
   my $throwable = $inv->new(@_);
   die $throwable;
 }
@@ -48,7 +53,7 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.200005
+version 0.200006
 
 =head1 SYNOPSIS
 
@@ -73,7 +78,9 @@ previous value for C<$@> and calls C<die $self>.
 =head2 previous_exception
 
 This attribute is created automatically, and stores the value of C<$@> when the
-Throwable object is created.
+Throwable object is created.  This is done on a I<best effort basis>.  C<$@> is
+subject to lots of spooky action-at-a-distance.  For now, there are clearly
+ways that the previous exception could be lost.
 
 =head1 METHODS
 

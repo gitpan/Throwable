@@ -57,6 +57,7 @@ eval { $v .= pmver('File::Temp','any version') };
 eval { $v .= pmver('Moo','1.000001') };
 eval { $v .= pmver('Moo::Role','any version') };
 eval { $v .= pmver('MooX::Types::MooseLike::Base','any version') };
+eval { $v .= pmver('Moose','any version') };
 eval { $v .= pmver('Scalar::Util','any version') };
 eval { $v .= pmver('Sub::Quote','any version') };
 eval { $v .= pmver('Test::More','0.96') };
