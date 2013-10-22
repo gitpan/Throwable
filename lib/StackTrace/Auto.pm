@@ -1,6 +1,6 @@
 package StackTrace::Auto;
 {
-  $StackTrace::Auto::VERSION = '0.200008';
+  $StackTrace::Auto::VERSION = '0.200009';
 }
 use Moo::Role;
 use Sub::Quote ();
@@ -91,13 +91,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.200008
+version 0.200009
 
 =head1 SYNOPSIS
 

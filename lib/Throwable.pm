@@ -1,6 +1,6 @@
 package Throwable;
 {
-  $Throwable::VERSION = '0.200008';
+  $Throwable::VERSION = '0.200009';
 }
 use Moo::Role;
 use Sub::Quote ();
@@ -15,7 +15,7 @@ our %_HORRIBLE_HACK;
 has 'previous_exception' => (
   is       => 'ro',
   default  => Sub::Quote::quote_sub(q<
-    if ($Throwable::_HORRIBLE_HACK{ERROR}) {
+    if (defined $Throwable::_HORRIBLE_HACK{ERROR}) {
       $Throwable::_HORRIBLE_HACK{ERROR}
     } elsif (defined $@ and (ref $@ or length $@)) {
       $@;
@@ -46,13 +46,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.200008
+version 0.200009
 
 =head1 SYNOPSIS
 
@@ -71,6 +73,9 @@ version 0.200008
 Throwable is a role for classes that are meant to be thrown as exceptions to
 standard program flow.  It is very simple and does only two things: saves any
 previous value for C<$@> and calls C<die $self>.
+
+Throwable is implemented with L<Moo>, so you can stick to Moo or use L<Moose>
+as you prefer.
 
 =head1 ATTRIBUTES
 
