@@ -1,42 +1,41 @@
 package StackTrace::Auto;
 # ABSTRACT: a role for generating stack traces during instantiation
-$StackTrace::Auto::VERSION = '0.200010';
+$StackTrace::Auto::VERSION = '0.200011';
 use Moo::Role;
 use Sub::Quote ();
-use MooX::Types::MooseLike::Base qw(ArrayRef);
-use Class::Load 0.20 ();
+use Module::Runtime 0.002 ();
 use Scalar::Util ();
 
-# =head1 SYNOPSIS
-#
-# First, include StackTrace::Auto in a Moose class...
-#
-#   package Some::Class;
-#   use Moose;
-#   with 'StackTrace::Auto';
-#
-# ...then create an object of that class...
-#
-#   my $obj = Some::Class->new;
-#
-# ...and now you have a stack trace for the object's creation.
-#
-#   print $obj->stack_trace->as_string;
-#
-# =attr stack_trace
-#
-# This attribute will contain an object representing the stack at the point when
-# the error was generated and thrown.  It must be an object performing the
-# C<as_string> method.
-#
-# =attr stack_trace_class
-#
-# This attribute may be provided to use an alternate class for stack traces.  The
-# default is L<Devel::StackTrace|Devel::StackTrace>.
-#
-# In general, you will not need to think about this attribute.
-#
-# =cut
+#pod =head1 SYNOPSIS
+#pod
+#pod First, include StackTrace::Auto in a Moose class...
+#pod
+#pod   package Some::Class;
+#pod   use Moose;
+#pod   with 'StackTrace::Auto';
+#pod
+#pod ...then create an object of that class...
+#pod
+#pod   my $obj = Some::Class->new;
+#pod
+#pod ...and now you have a stack trace for the object's creation.
+#pod
+#pod   print $obj->stack_trace->as_string;
+#pod
+#pod =attr stack_trace
+#pod
+#pod This attribute will contain an object representing the stack at the point when
+#pod the error was generated and thrown.  It must be an object performing the
+#pod C<as_string> method.
+#pod
+#pod =attr stack_trace_class
+#pod
+#pod This attribute may be provided to use an alternate class for stack traces.  The
+#pod default is L<Devel::StackTrace|Devel::StackTrace>.
+#pod
+#pod In general, you will not need to think about this attribute.
+#pod
+#pod =cut
 
 has stack_trace => (
   is       => 'ro',
@@ -56,26 +55,29 @@ has stack_trace => (
 has stack_trace_class => (
   is      => 'ro',
   isa     => Sub::Quote::quote_sub(q{
-      die "stack_trace_class must be a loaded class"
-          unless Class::Load::is_class_loaded($_[0]);
+    die "stack_trace_class must be a class that responds to ->new"
+      unless defined($_[0]) && !ref($_[0]) && $_[0]->can("new");
   }),
   coerce  => Sub::Quote::quote_sub(q{
-    Class::Load::load_class($_[0]);
+    Module::Runtime::use_package_optimistically($_[0]);
   }),
   lazy    => 1,
   builder => '_build_stack_trace_class',
 );
 
-# =attr stack_trace_args
-#
-# This attribute is an arrayref of arguments to pass when building the stack
-# trace.  In general, you will not need to think about it.
-#
-# =cut
+#pod =attr stack_trace_args
+#pod
+#pod This attribute is an arrayref of arguments to pass when building the stack
+#pod trace.  In general, you will not need to think about it.
+#pod
+#pod =cut
 
 has stack_trace_args => (
   is      => 'ro',
-  isa     => ArrayRef,
+  isa     => Sub::Quote::quote_sub(q{
+      die "stack_trace_args must be an arrayref"
+          unless ref($_[0]) && ref($_[0]) eq "ARRAY";
+  }),
   lazy    => 1,
   builder => '_build_stack_trace_args',
 );
@@ -125,7 +127,7 @@ StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.200010
+version 0.200011
 
 =head1 SYNOPSIS
 

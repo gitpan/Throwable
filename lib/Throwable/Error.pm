@@ -1,78 +1,80 @@
 package Throwable::Error;
 # ABSTRACT: an easy-to-use class for error objects
-$Throwable::Error::VERSION = '0.200010';
+$Throwable::Error::VERSION = '0.200011';
 use Moo 1.000001;
-use MooX::Types::MooseLike::Base qw(Str);
 with 'Throwable', 'StackTrace::Auto';
 
-# =head1 SYNOPSIS
-#
-#   package MyApp::Error;
-#   use Moose;
-#   extends 'Throwable::Error';
-#
-#   has execution_phase => (
-#     is  => 'ro',
-#     isa => 'MyApp::Phase',
-#     default => 'startup',
-#   );
-#
-# ...and in your app...
-#
-#   MyApp::Error->throw("all communications offline");
-#
-#   # or...
-#
-#   MyApp::Error->throw({
-#     message         => "all communications offline",
-#     execution_phase => 'shutdown',
-#   });
-#
-# =head1 DESCRIPTION
-#
-# Throwable::Error is a base class for exceptions that will be thrown to signal
-# errors and abort normal program flow.  Throwable::Error is an alternative to
-# L<Exception::Class|Exception::Class>, the features of which are largely
-# provided by the Moose object system atop which Throwable::Error is built.
-#
-# Throwable::Error performs the L<Throwable|Throwable> and L<StackTrace::Auto>
-# roles.  That means you can call C<throw> on it to create and throw an error
-# object in one call, and that every error object will have a stack trace for its
-# creation.
-#
-# =cut
+#pod =head1 SYNOPSIS
+#pod
+#pod   package MyApp::Error;
+#pod   use Moose;
+#pod   extends 'Throwable::Error';
+#pod
+#pod   has execution_phase => (
+#pod     is  => 'ro',
+#pod     isa => 'MyApp::Phase',
+#pod     default => 'startup',
+#pod   );
+#pod
+#pod ...and in your app...
+#pod
+#pod   MyApp::Error->throw("all communications offline");
+#pod
+#pod   # or...
+#pod
+#pod   MyApp::Error->throw({
+#pod     message         => "all communications offline",
+#pod     execution_phase => 'shutdown',
+#pod   });
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod Throwable::Error is a base class for exceptions that will be thrown to signal
+#pod errors and abort normal program flow.  Throwable::Error is an alternative to
+#pod L<Exception::Class|Exception::Class>, the features of which are largely
+#pod provided by the Moose object system atop which Throwable::Error is built.
+#pod
+#pod Throwable::Error performs the L<Throwable|Throwable> and L<StackTrace::Auto>
+#pod roles.  That means you can call C<throw> on it to create and throw an error
+#pod object in one call, and that every error object will have a stack trace for its
+#pod creation.
+#pod
+#pod =cut
 
 use overload
   q{""}    => 'as_string',
   fallback => 1;
 
-# =attr message
-#
-# This attribute must be defined and must contain a string describing the error
-# condition.  This string will be printed at the top of the stack trace when the
-# error is stringified.
-#
-# =cut
+#pod =attr message
+#pod
+#pod This attribute must be defined and must contain a string describing the error
+#pod condition.  This string will be printed at the top of the stack trace when the
+#pod error is stringified.
+#pod
+#pod =cut
 
 has message => (
   is       => 'ro',
-  isa      => Str,
+  isa      => Sub::Quote::quote_sub(q{
+      die "message must be a string"
+          unless defined($_[0]) && !ref($_[0]);
+  }),,
   required => 1,
 );
 
-# =attr stack_trace
-#
-# This attribute, provided by L<StackTrace::Auto>, will contain a stack trace
-# object guaranteed to respond to the C<as_string> method.  For more information
-# about the stack trace and associated behavior, consult the L<StackTrace::Auto>
-# docs.
-#
-# =method as_string
-#
-# This method will provide a string representing the error, containing the
-# error's message followed by the its stack trace.
-#
-# =cut
+#pod =attr stack_trace
+#pod
+#pod This attribute, provided by L<StackTrace::Auto>, will contain a stack trace
+#pod object guaranteed to respond to the C<as_string> method.  For more information
+#pod about the stack trace and associated behavior, consult the L<StackTrace::Auto>
+#pod docs.
+#pod
+#pod =method as_string
+#pod
+#pod This method will provide a string representing the error, containing the
+#pod error's message followed by the its stack trace.
+#pod
+#pod =cut
 
 sub as_string {
   my ($self) = @_;
@@ -111,7 +113,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.200010
+version 0.200011
 
 =head1 SYNOPSIS
 
