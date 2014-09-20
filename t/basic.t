@@ -16,6 +16,22 @@ BEGIN {
     use $class;
     extends 'Throwable::Error';
 
+    package MyError2;
+    use $class;
+    extends 'Throwable::Error';
+  }.q{
+
+    use Carp qw(cluck);
+    around _build_stack_trace_args => sub {
+      my ($orig, $self) = (shift, shift);
+
+      return [
+        @{$self->$orig(@_)},
+        no_refs => 1,
+        respect_overload => 1,
+      ];
+    };
+
     1;
   } or die $@;
 }
@@ -69,6 +85,31 @@ sub create_error { HasError->new->{error} }
   is(@frames, 2 + $extra_frames, "two frames from constructor");
   is($frames[0]->subroutine, q{HasError::new}, 'correct constructor in frame 0');
   is($frames[1]->subroutine, q{main::create_error}, 'correct frame 1');
+}
+
+{
+    package MyTrace;
+    use base 'Devel::StackTrace';
+}
+
+# make sure to catch intermittent failures due to attribute initialisation order
+for my $i (1..10) {
+    eval { MyError->throw({ message => 'aieee!', stack_trace_class => 'MyTrace' }) };
+
+    my $error = $@;
+    isa_ok($error->stack_trace, 'MyTrace', "the trace (run $i)")
+}
+
+{
+    eval {
+        local $SIG{ALRM} = sub { fail('no_refs + respect_overload finishes'); exit 1; };
+        alarm 10;
+        MyError2->throw('aiee!');
+    };
+    alarm 0;
+
+    my $error = $@;
+    isa_ok($error, 'MyError2', 'the error');
 }
 
 done_testing();
